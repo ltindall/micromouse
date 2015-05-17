@@ -158,3 +158,64 @@ void floodfill( Stack * stack)
 
 	}
 }
+
+/* function for obtaining this nodes's smallest neighbor's direction */
+short get_smallest_neighbor_dir (Node * this_node, const short preferred_dir) {
+
+  short smallestval; 		/* smallest neighbor value */
+  
+
+  /* debug statement */
+  if (debug_on)
+    printf("In get_smallest_neighbor_dir\n");
+
+  /* get the smallest neighboring flood_val */
+  smallestval = get_smallest_neighbor(this_node);
+
+  switch (preferred_dir){
+
+  case NORTH: 
+    if ((this_node->up != NULL) && (this_node->up->floodval == smallestval))
+      return NORTH;
+    break;
+  case EAST: 
+    if ((this_node->right != NULL) && (this_node->right->floodval == smallestval))
+      return EAST;
+    break;
+  case SOUTH: 
+    if ((this_node->down != NULL) && (this_node->down->floodval == smallestval))
+      return SOUTH;
+    break;
+  case WEST:  
+    if ((this_node->left != NULL) && (this_node->left->floodval == smallestval))
+      return WEST;
+    break;
+
+  }
+
+  /* if there is only one path, return that direction */
+  //if (pathcount > 1)
+  //	return preferred_dir;
+
+  /* if there are multiple available paths, choose the favorable path */
+
+
+  if ((this_node->up != NULL) && (this_node->up->floodval == smallestval) && (this_node->up->visited == FALSE))
+    return NORTH;
+  else if ((this_node->right != NULL) && (this_node->right->floodval == smallestval) && (this_node->right->visited == FALSE))
+    return EAST;
+  else if ((this_node->down != NULL) && (this_node->down->floodval == smallestval) && (this_node->down->visited == FALSE))
+    return SOUTH;
+  else if ((this_node->left != NULL) && (this_node->left->floodval == smallestval) && (this_node->left->visited == FALSE))
+    return WEST;
+
+  if ((this_node->up != NULL) && (this_node->up->floodval == smallestval))
+    return NORTH;
+  else if ((this_node->right != NULL) && (this_node->right->floodval == smallestval))
+    return EAST;
+  else if ((this_node->down != NULL) && (this_node->down->floodval == smallestval))
+    return SOUTH;
+  else //if ((this_node->left != NULL) && (this_node->left->floodval) == smallestval)
+  return WEST;
+
+}

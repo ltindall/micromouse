@@ -169,7 +169,12 @@ int main( int argc, char * argv[])
 	floodfill(thestack);
 	print_map(themaze);
 
-
+	Node * tenthree = themaze->map[10][3];
+	short foo = get_smallest_neighbor_dir(tenthree, WEST); 
+	printf("Preferred direction with no walls %d", foo); 
+	set_wall(tenthree, WEST); 
+	short fu = get_smallest_neighbor_dir(tenthree, WEST); 
+	printf("new pref dir %d", fu); 
 
 
 
