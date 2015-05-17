@@ -1,6 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
-//#include "Maze2.h"
+#include "Maze2.h"
 
 
 

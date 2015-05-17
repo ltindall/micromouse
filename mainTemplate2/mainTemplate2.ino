@@ -6,6 +6,7 @@
 
 #include "Sensor.h"
 #include "Stack.c"
+#include "Queue.c"
 
 #include "Drive.h"
 #include <LedDisplay.h>
@@ -228,20 +229,20 @@ void loop()
 //    test_tone(); 
 //    delay(400); 
 //  }
-test_tone(); 
-  digitalWrite(led1, LOW);
-  digitalWrite(led2, LOW);
-  digitalWrite(led3, LOW);
-  delay(200); 
-  Serial.print("asdfwf"); 
-  while(1){
-    Serial.print("hello: "); 
-    Serial.println(digitalRead(button3)); 
-   if(!digitalRead(button3)){
-    test_tone(); 
-    delay(400); 
-   } 
-  }
+//test_tone(); 
+//  digitalWrite(led1, LOW);
+//  digitalWrite(led2, LOW);
+//  digitalWrite(led3, LOW);
+//  delay(200); 
+//  Serial.print("asdfwf"); 
+//  while(1){
+//    Serial.print("hello: "); 
+//    Serial.println(digitalRead(button3)); 
+//   if(!digitalRead(button3)){
+//    test_tone(); 
+//    delay(400); 
+//   } 
+//  }
 //  while(!digitalRead(button1)){
 //    if(digitalRead(button2))
 //      digitalWrite(led1, HIGH); 
@@ -262,7 +263,7 @@ test_tone();
   delay(1000); 
   readSensor();
  
-
+  speedrun(100);
  
   
 //  while(1){
@@ -316,6 +317,23 @@ test_tone();
      //print_map_serial(my_maze); //Debugging: prints out flood values of the maze to Serial port
      //Serial.println("end"); 
   }
+  
+  
+    
+  while(!leftSeen || !rightSeen )
+  {
+    readSensor();  
+    if( leftSensor > 450 )
+      leftSeen = true;
+    if( rightSensor > 450 ) 
+      rightSeen = true; 
+  }
+  test_tone(); 
+  readSensor(); 
+  delay(1000); 
+  readSensor();
+  
+  
 
   ////redo floodfill
 
@@ -1227,7 +1245,145 @@ void adjust(){
     calls++;
 
   }
+
 	
  
 }
+
+/* Function: move_multi_cell
+Description: Should make the mouse move forward in the direction of 1 cell
+*/
+void move_multi_cell(int speed, int multi) {
+  //initialize encoder values to 0
+  R_encoder_val = 0;
+  L_encoder_val = 0;
+  frontwallflag = 0;
+
+
+  //remember and increase base speeds (to be restored at end of function)
+  int prevRSpeed = rightBaseSpeed;
+  int prevLSpeed = leftBaseSpeed;
+  rightBaseSpeed = speed;
+  leftBaseSpeed = 0.94*speed;
+  if(multi < 3) //dont go too fast if we are only moving less than 3 cells.
+  {
+    rightBaseSpeed = 60;
+    leftBaseSpeed = 57;
+  }
+  
+  //while the left encoder has not moved 1 "full" cell yet
+  while(L_encoder_val <= ONECELL*multi && !frontwallflag)
+  {
+    readSensor();    //read in sensors to update sensor readings
+    pid();           //call pid to make sure it is going straight based on sensor readings
+  }
+  
+  //BRAKE HARD
+  drive.leftBackward(speed+30);  //90 for real maze
+  drive.rightBackward(speed+30);  //90 for real maze
+  delay(40);                //30 for real maze
+  drive.leftBackward(0);
+  drive.rightBackward(0);
+
+  //restore base speeds
+  rightBaseSpeed = prevRSpeed;
+  leftBaseSpeed = prevLSpeed;
+
+}
+
+void speedrun(int maxspeed)
+{
+
+  //reset mouse to start
+  x = 0;
+  y = 15;
+  direction = NORTH;
+  found_dest = FALSE;
+
+  Node * cell = my_maze->map[x][y];
+
+  struct Queue * speedqueue = new_Queue();
+
+  //put directions from start to goal on the queue.
+  while( cell->row != 8 && cell->row != 7 && cell->column != 8 && cell->column != 7 )
+  {
+    short nextDirection = get_smallest_neighbor_dir(cell,direction);
+    Qpush(speedqueue,nextDirection);
+
+    //update next cell coordinates.
+    if(nextDirection == NORTH)
+    {     
+      cell = cell->up;
+      direction = nextDirection;
+    }
+    if(nextDirection == SOUTH)
+    {
+      cell = cell->down;
+      direction = nextDirection;
+    }
+    if(nextDirection == EAST)
+    {
+      cell = cell->right;
+      direction = nextDirection;
+    }
+    if(nextDirection == WEST)
+    {
+      cell = cell->left;
+      direction = nextDirection;
+    }
+  }//endwhile
+
+  direction = NORTH;
+  short speedToDirection;
+  short turnDirection;
+  short inARow;
+  while(!is_empty_Queue(speedqueue)){
+
+    inARow = 1;
+    speedToDirection = Qpop(speedqueue);
+
+    while( Qpeek(speedqueue) == speedToDirection ){
+      Qpop(speedqueue);
+      inARow++;
+    }//endwhile
+
+    move_multi_cell(maxspeed, inARow);
+    delay(300);
+
+    //turn to face next direction
+    turnDirection = Qpeek(speedqueue);
+    if( direction == NORTH )
+    {
+      if( turnDirection == EAST )
+        turn_right();
+      else if( turnDirection == WEST )
+        turn_left();
+    }
+    else if( direction == EAST )
+    {
+      if( turnDirection == NORTH )
+        turn_left();
+      else if( turnDirection == SOUTH )
+        turn_right();
+    }
+    else if( direction == WEST )
+    {
+      if( turnDirection == NORTH )
+        turn_right();
+      else if(turnDirection == SOUTH )
+        turn_left();
+    }
+    else //direction == SOUTH
+    {
+      if( turnDirection == WEST )
+        turn_right();
+      else if( turnDirection == EAST )
+        turn_left();
+    }
+    direction = turnDirection;
+    delay(100);
+
+  }//endwhile
+
+}//endspeedrun
 

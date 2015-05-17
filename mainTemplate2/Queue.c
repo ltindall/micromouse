@@ -1,6 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
-//#include "Maze2.h"
+#include "Maze2.h"
 
 
 
@@ -42,5 +42,8 @@ void Qpush (Queue * this_queue, short newDirection) {
   (this_queue->size)++;
 }
 
+short Qpeek (Queue * this_queue){
+  return this_queue->directions[this_queue->position];
+}
 
 

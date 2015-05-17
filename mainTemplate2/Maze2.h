@@ -82,6 +82,7 @@ Queue * new_Queue();
 int is_empty_Queue (Queue * this_queue);
 short Qpop (Queue * this_queue);
 void Qpush (Queue * this_queue, short newDirection);
+short Qpeek (Queue * this_queue);
 
 
 // Stack Functions
