@@ -1,11 +1,11 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include "Maze.h"
+#include "Maze2.h"
 
 
 
 // Stack Constructor
-Stack * new_Stack() {
+Stack* new_Stack() {
 
   Stack * this_stack = (Stack *) malloc(sizeof(Stack));
 

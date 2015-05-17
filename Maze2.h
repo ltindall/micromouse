@@ -28,6 +28,12 @@
 #define START_Y 0
 #define LARGEVAL 301
 
+// Stack Constants
+#define SPI 1     // Stack Pointer Index
+#define SSI 0       // Stack Size Index
+#define STACK_OFFSET 2
+#define STACKSIZE 80
+
 
 
 typedef struct Node { 
@@ -53,6 +59,17 @@ typedef struct Maze {
 
 } 
 Maze;
+
+typedef struct Stack {
+
+  short properties [STACK_OFFSET];
+  Node * the_stack [STACKSIZE];
+
+} 
+Stack;
+
+
+
 
 
 
