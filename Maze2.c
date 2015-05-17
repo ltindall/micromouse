@@ -68,3 +68,20 @@ void set_wall(Node * cell, short walldirection)
 		neighbor->right = NULL;
 	}
 }
+
+short get_smallest_neighbor( Node * cell )
+{
+
+	short smallest = 999; 
+
+	if( cell->left != NULL && cell->left->floodval < smallest)
+		smallest = cell->left->floodval; 
+	if( cell->right != NULL && cell->right->floodval < smallest)
+		smallest = cell->right->floodval;
+	if( cell->up != NULL && cell->up->floodval < smallest)
+		smallest = cell->up->floodval; 
+	if( cell->down != NULL && cell->down->floodval < smallest)
+		smallest = cell->down->floodval;
+
+	return smallest; 
+}
