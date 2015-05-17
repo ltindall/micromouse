@@ -1098,66 +1098,33 @@ void visit(Maze * this_maze, Stack * this_stack, short x, short y, short flag) {
 
 
 
-  //correspondingly update the walls based on which direction we are facing
-  if (direction == NORTH) {    //check if direction is currently facing NORTH
-    if (check_front_wall()) {    //there is a front wall
-      set_wall(this_node, NORTH);
-      northwall = TRUE;
-    }
-  }
-  else if (direction == EAST){  //check if direction is currently facing EAST
-    if (check_front_wall()) {
-      set_wall(this_node, EAST);
-      eastwall = TRUE;
-    }
-  }
-  else if (direction == SOUTH) {
-    if (check_front_wall()) {
-      set_wall(this_node, SOUTH);
-      southwall = TRUE;
-    }
-  }
-  else {//direction we are facing is WEST
-    if (check_front_wall()) {
-      set_wall(this_node, WEST);
-      westwall = TRUE;
-    }
-  }
+/////////////////////////////////////////////////////
 
-//  Serial.print("Row"); 
-//  Serial.println(ROW); 
-//  Serial.print("Col"); 
-//  Serial.println(COL); 
 
-  /* If there is a wall -> do a series of checks and pushes onto the stack */
+  // If there is a wall -> do a series of checks and pushes onto the stack 
   if (northwall) {
     if (this_node->row != 0)
-      push (this_stack, MAP[ROW-1][COL]);
-    set_wall(this_node, NORTH);
+      push (this_stack, this_maze->map[this_node->col][this_node->row -1]);
   }
   if (eastwall) {
     if (this_node->column != SIZE-1)
-      push (this_stack, MAP[ROW][COL+1]);
-    set_wall(this_node, EAST);
+      push (this_stack, this_maze->map[this_node->col+1][this_node->row]);
   }
   if (southwall) {
     if (this_node->row != SIZE-1)
-      push (this_stack, MAP[ROW+1][COL]);
-    set_wall(this_node, SOUTH);
+      push (this_stack, this_maze->map[this_node->col][this_node->row+1]);
   }
   if (westwall) {
     if (this_node->column != 0)
-      push (this_stack, MAP[ROW][COL-1]);
+      push (this_stack, this_maze->map[this_node->col - 1][this_node->row]);
     set_wall(this_node, WEST);
   }
+
   /* push this node itself, as it was updated */
   push(this_stack, this_node);
 
-  /* pop until the stack is empty, and call flood_fill on that node */
-  while (!is_empty_Stack(this_stack)) {
-    pop(this_stack, &this_node);
-    /* NOTE: the flag parameter determines wheter to update goal cells or not */
-    flood_fill(this_node, this_stack, flag);
-  }
+
+    flood_fill(this_stack);
+  
   set_visited (this_node);
 }//end visit_node
