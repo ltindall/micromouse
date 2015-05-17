@@ -32,17 +32,29 @@ int main( int argc, char * argv[])
 	//test get_smallest_neighbor
 	printf("\n\n%s", "testing get get_smallest_neighbor" );
 	Node * northcell = new_Node(2,0);
+	northcell->floodval = 9;
 	Node * southcell = new_Node(2,2);
+	southcell->floodval = 7;
 	Node * eastcell = new_Node(3,1);
+	eastcell->floodval = 5;
 	Node * westcell = new_Node(1,1);
+	westcell->floodval = 10;
 
 	newNode->up = northcell;
 	newNode->left = westcell;
 	set_wall(newNode,EAST);
 	newNode->down = southcell;
 
-	if(get_smallest_neighbor(newNode) == 7)
+	short smallval = get_smallest_neighbor(newNode);
+
+	if(smallval == 7)
 		printf("%s\n", "get_smallest_neighbor: PASSED");
-	else
-		printf("%s\n", "get_smallest_neighbor: FAILED");
+	else{
+		printf("%s,%d\n", "get_smallest_neighbor: FAILED",smallval);
+	}
+
+
+	
+
+
 }
