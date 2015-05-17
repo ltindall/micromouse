@@ -75,12 +75,13 @@ typedef struct Queue {
   int position;
 
 }
+Queue;
 
 //Queue Functions
 Queue * new_Queue();
 int is_empty_Queue (Queue * this_queue);
-short pop (Queue * this_queue);
-void push (Queue * this_queue, short newDirection);
+short Qpop (Queue * this_queue);
+void Qpush (Queue * this_queue, short newDirection);
 
 
 // Stack Functions

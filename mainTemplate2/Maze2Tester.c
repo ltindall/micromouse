@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include "Maze2.c"
 #include "Stack.c"
+#include "Queue.c"
 
 int main( int argc, char * argv[])
 {
@@ -176,7 +177,30 @@ int main( int argc, char * argv[])
 	short fu = get_smallest_neighbor_dir(tenthree, WEST); 
 	printf("new pref dir %d", fu); 
 
+	//test queue
+	printf("%s\n", "testing queue");
+	Queue * speedqueue = new_Queue();
+	if(is_empty_Queue(speedqueue))
+		printf("%s\n", "queue is empty");
+	Qpush(speedqueue, (short)NORTH);
+	Qpush(speedqueue, (short)SOUTH);
+	if(!is_empty_Queue(speedqueue))
+		printf("%s\n", "queue is not empty");
+	printf("%s", "top of queue is..." );
+	printf("%hu\n", Qpop(speedqueue));
+	printf("%s", "top of queue is..." );
+	printf("%hu\n", Qpop(speedqueue));
 
+	if(is_empty_Queue(speedqueue))
+		printf("%s\n", "queue is empty");
+	Qpush(speedqueue, EAST);
+	if(!is_empty_Queue(speedqueue))
+		printf("%s\n", "queue is not empty");
+	printf("%s", "top of queue is..." );
+	printf("%hu\n", Qpop(speedqueue));
+
+
+	
 
 
 }
