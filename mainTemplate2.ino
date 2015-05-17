@@ -1023,11 +1023,21 @@ void lcd_display_location(void){
 void visit(Maze * this_maze, Stack * this_stack, short x, short y, short flag) {
  
   
-  Node * this_node;                                  //initialize a node
+  Node * this_node;     
+  Node * next_node;                             //initialize a node
   short northwall, eastwall, southwall, westwall;    //boolean values of wall on each side
 
   this_node = this_maze->map[x][y];                  //initialize node to the node we want to go to
   northwall = eastwall = southwall = westwall = FALSE;
+
+  if( direction == NORTH && (y > 0) )
+    next_node = this_maze->map[x][y-1];
+  if( direction == EAST && (x < (SIZE - 1)) )
+    next_node = this_maze->map[x+1][y];
+  if( direction == SOUTH && (y < (SIZE-1)) )
+    next_node = this_maze->map[x][y+1];
+  if( direction == WEST && (x > 0) )
+    next_node = this_maze->map[x-1][y];
 
   readSensor();
   short left = check_left_wall(); 
@@ -1035,12 +1045,12 @@ void visit(Maze * this_maze, Stack * this_stack, short x, short y, short flag) {
   short front = check_front_wall(); 
 
   if( direction == NORTH ){
-    if(left){
-      set_wall(this_node, WEST); 
+    if(left && !front){
+      set_wall(next_node, WEST); 
       westwall = TRUE; 
     }
-    if(right){
-      set_wall(this_node, EAST); 
+    if(right && !front){
+      set_wall(next_node, EAST); 
       eastwall = TRUE; 
     }
     if(front){
@@ -1051,12 +1061,12 @@ void visit(Maze * this_maze, Stack * this_stack, short x, short y, short flag) {
   }
 
   else if(direction == WEST){
-    if(left){
-      set_wall(this_node, SOUTH); 
+    if(left && !front){
+      set_wall(next_node, SOUTH); 
       southwall = TRUE; 
     }
-    if(right){
-      set_wall(this_node, NORTH); 
+    if(right && !front){
+      set_wall(next_node, NORTH); 
       northwall = TRUE; 
     }
     if(front){
@@ -1066,12 +1076,12 @@ void visit(Maze * this_maze, Stack * this_stack, short x, short y, short flag) {
   }
 
   else if(direction == EAST ){
-    if(left){
-      set_wall(this_node, NORTH); 
+    if(left && !front){
+      set_wall(next_node, NORTH); 
       northwall = TRUE; 
     }
-    if(right){
-      set_wall(this_node, SOUTH); 
+    if(right && !front){
+      set_wall(next_node, SOUTH); 
       southwall = TRUE; 
     }
     if(front){
@@ -1081,12 +1091,12 @@ void visit(Maze * this_maze, Stack * this_stack, short x, short y, short flag) {
   }
 
   else{
-    if(left){
-      set_wall(this_node, EAST); 
+    if(left && !front){
+      set_wall(next_node, EAST); 
       eastwall = TRUE; 
     }
-    if(right){
-      set_wall(this_node, WEST); 
+    if(right && !front){
+      set_wall(next_node, WEST); 
       westwall = TRUE; 
     }
     if(front){
@@ -1102,6 +1112,7 @@ void visit(Maze * this_maze, Stack * this_stack, short x, short y, short flag) {
 
 
   // If there is a wall -> do a series of checks and pushes onto the stack 
+  /*
   if (northwall) {
     if (this_node->row != 0)
       push (this_stack, this_maze->map[this_node->col][this_node->row -1]);
@@ -1119,12 +1130,16 @@ void visit(Maze * this_maze, Stack * this_stack, short x, short y, short flag) {
       push (this_stack, this_maze->map[this_node->col - 1][this_node->row]);
     set_wall(this_node, WEST);
   }
+  */
 
   /* push this node itself, as it was updated */
-  push(this_stack, this_node);
+  if(front)
+    push(this_stack, this_node);
+  else if( !front && (right || left) )
+    push(this_stack, next_node);
 
 
     flood_fill(this_stack);
   
-  set_visited (this_node);
+  //set_visited (this_node);
 }//end visit_node
