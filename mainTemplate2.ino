@@ -2,8 +2,8 @@
 */
 #include <avr/io.h>
 
-#include "Maze.c"
-#include "Maze.h"
+#include "Maze2.c"
+#include "Maze2.h"
 #include "Stack.c"
 #include "Sensor.h"
 #include "Drive.h"
@@ -236,8 +236,9 @@ void loop()
     Serial.println("start"); 
      readSensor();          // read sensors
      
-     visit_next_node(my_maze,my_stack,x,y,TRUE); //visit node in front to detect LEFT/RIGHTwalls
-     visit_node(my_maze,my_stack,x,y,TRUE); //visit current node to detect FRONT walls
+     //visit_next_node(my_maze,my_stack,x,y,TRUE); //visit node in front to detect LEFT/RIGHTwalls
+     //visit_node(my_maze,my_stack,x,y,TRUE); //visit current node to detect FRONT walls
+     visit(my_maze,my_stack,x,y,TRUE);
      print_map_serial(my_maze); //Debugging: prints out flood values of the maze to Serial port
 
      delay(100);
@@ -265,11 +266,11 @@ void loop()
        myDisplay.print("W");
        Serial.print("WEST\n");
      }
-     delay(3000);
+     delay(1000);
      change_dir(my_maze,&x,&y,&direction); //turns the mouse to face the direction of best path. updates location (x,y)
      delay(100); 
      move_single_cell();   // move a single cell forward in direction chosen by change_dir
-     delay(3000);
+     delay(1000);
   
      check_goal_reached(&x, &y, &found_dest); //neccesary to know if mouse should stop, will set found_dest flag
 
@@ -588,13 +589,13 @@ void change_dir ( Maze * this_maze, short * x, short * y, short * dir){
 
   /* update the appropriate location value x or y */
   if (next_dir == NORTH) 
-    (*x) = (*x) - 1;
-  else if (next_dir == EAST) 
-    (*y) = (*y) + 1;
-  else if (next_dir == SOUTH) 
-    (*x) = (*x) + 1;
-  else if (next_dir == WEST) 
     (*y) = (*y) - 1;
+  else if (next_dir == EAST) 
+    (*x) = (*x) + 1;
+  else if (next_dir == SOUTH) 
+    (*y) = (*y) + 1;
+  else if (next_dir == WEST) 
+    (*x) = (*x) - 1;
 
   // Turn the actual mouse in the optimal direction
   if (*dir == NORTH) {
