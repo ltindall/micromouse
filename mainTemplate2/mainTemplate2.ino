@@ -3,9 +3,10 @@
 #include <avr/io.h>
 
 #include "Maze2.c"
-#include "Maze2.h"
+//#include "Maze2.h"
 #include "Sensor.h"
 #include "Stack.c"
+#include "Queue.c"
 #include "Drive.h"
 #include <LedDisplay.h>
 #include <avr/interrupt.h>
@@ -17,6 +18,11 @@
 #define led1 26
 #define led2 27
 #define led3 28
+
+//Button definition
+#define button1 13
+#define button2 12
+#define button3 11
 
 //Sensors
 #define LF_Emitter 23        //left front emitter
@@ -176,6 +182,10 @@ void setup()
   pinMode(led2, OUTPUT);  //setup led2 for output
   pinMode(led3, OUTPUT);  //setup led3 for output
 
+  pinMode(button1, INPUT); 
+  pinMode(button2, INPUT); 
+  pinMode(button3, INPUT);
+
   //setup the speaker pin
   pinMode(speaker, OUTPUT);
   ran = 0; 
@@ -216,7 +226,13 @@ void loop()
 //  }
   
   delay(200); 
-
+  while(!digitalRead(button1)){
+    if(digitalRead(button2))
+      digitalWrite(led1, HIGH); 
+    if(digitalRead(button3))
+      digitalWrite(led2, HIGH); 
+  }
+  
   while(!leftSeen || !rightSeen )
   {
     readSensor();  
