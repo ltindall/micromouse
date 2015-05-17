@@ -53,8 +53,20 @@ int main( int argc, char * argv[])
 		printf("%s,%d\n", "get_smallest_neighbor: FAILED",smallval);
 	}
 
+	//test maze constructor
+	printf("%s\n","testing maze construction" );
+	Maze * themaze = new_Maze();
+	print_map(themaze);
+	Node * threefour = themaze->map[3][4];
+	printf("%s\n", "neighbors of cell 3,4:" );
+	printf("north: %d,%d\n", threefour->up->column, threefour->up->row );
+	printf("south: %d,%d\n", threefour->down->column, threefour->down->row );
+	printf("east: %d,%d\n", threefour->right->column, threefour->right->row );
+	printf("west: %d,%d\n", threefour->left->column, threefour->left->row );
 
-	
+
+
+
 
 
 }
