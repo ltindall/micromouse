@@ -55,15 +55,15 @@ int brightness = 15;        // screen brightness
 #define WEST 3
 
 //constants for encoder to turn right/left/180
-#define TURN_RIGHT_COUNT 2225      //1900 for fake maze; 2325 for real maze
-#define TURN_LEFT_COUNT 2275      //1850 for fake maze +/- 50; 2275 for real maze
+#define TURN_RIGHT_COUNT 2125      //1900 for fake maze; 2325 for real maze
+#define TURN_LEFT_COUNT 2050      //1850 for fake maze +/- 50; 2275 for real maze
 #define TURN_AROUND_COUNT 4600    //3000 for fake maze; 3550 for real maze
-#define ONECELL 7650              //7200 for fake maze; 7300 for real maze //7000 for fresh
+#define ONECELL 7550              //7200 for fake maze; 7300 for real maze //7000 for fresh
 
 
 //constants for wall sensing left/right/front
 #define hasLeftWall 170 //190 for fake maze;
-#define hasRightWall 190  //220 for fake maze; 185(rightwall) for real maze
+#define hasRightWall 170  //220 for fake maze; 185(rightwall) for real maze
 #define hasFrontWall 300  //300 for fake maze; 
 
 #define PIDSTOP 550    //600 for fake maze;  570 for real
@@ -80,8 +80,8 @@ int errorP = 0;
 int errorD = 0; 
 int oldErrorP = 0; 
 int newOffset = 15;     // increase to go right
-int rightBaseSpeed = 16; //25 old values
-int leftBaseSpeed = 15;//22
+int rightBaseSpeed = 18; //25 old values
+int leftBaseSpeed = 17;//22
 
 //PD values
 double P = 0.125; //was 0.25
@@ -271,9 +271,9 @@ void loop()
        myDisplay.print("W");
 
      
-     delay(150);
+     //delay(50);
      change_dir(my_maze,&x,&y,&direction); //turns the mouse to face the direction of best path. updates location (x,y)
-     delay(150); 
+     //delay(50); 
      move_single_cell();   // move a single cell forward in direction chosen by change_dir
      
 
@@ -456,7 +456,7 @@ void turn_left()
   int encoder_number = L_encoder_val;  // get the left encoder value at the beginning of when we want to turn
 
   
-  delay(100);  // decrease delay if mouse pauses too much, increase it if the mouse tries to turn
+  delay(50);  // decrease delay if mouse pauses too much, increase it if the mouse tries to turn
   	       // before slowing down enough (same thing in turn_right)  
   // make right side go forward, left side go backwards -> turn left
   //jolt motors
@@ -474,7 +474,7 @@ void turn_left()
   drive.rightBackward(0);
 
   
-  delay(150);
+  delay(50);
   
   // why are we setting it to 0?
   R_encoder_val = 0;
@@ -492,7 +492,7 @@ void turn_right()  // point turn
   int encoder_number = L_encoder_val;  //find the current right encoder value
  
   
-  delay(100);  //delay 1 second
+  delay(50);  //delay 1 second
   //jolt the motors
   drive.leftForward(60);
   drive.rightBackward(60);
@@ -509,7 +509,7 @@ void turn_right()  // point turn
   drive.leftBackward(0);
   drive.rightForward(0);
   
-  delay(150);
+  delay(50);
   
   R_encoder_val = 0;
   L_encoder_val = 0;
@@ -527,7 +527,7 @@ void turn_around()  // point turn
   
 
   
-  delay(100);  //delay 1 second
+  delay(50);  //delay 1 second
   
   //turn left motor forward, and right motor back -> turn around
   drive.leftForward(60);
@@ -545,7 +545,7 @@ void turn_around()  // point turn
   drive.leftBackward(0);
   drive.rightForward(0);
   
-  delay(150); // tune this value for complete turn ******* ///////////////////
+  delay(50); // tune this value for complete turn ******* ///////////////////
   
   R_encoder_val = 0;
   L_encoder_val = 0;
@@ -635,7 +635,7 @@ void change_dir ( Maze * this_maze, short * x, short * y, short * dir){
 
   // update the direction 
   (*dir) = next_dir;
-  delay(150);
+  delay(50);
 }//end change_dir
 
 /** Function: visit

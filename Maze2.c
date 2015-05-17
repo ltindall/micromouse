@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include "Maze2.h"
 
+
 /* Function: set walls of cell
    Description: given a cell, and given a direction of a wall in that cell
    				"set a wall" of that cell by removing pointers between the
@@ -138,13 +139,14 @@ void floodfill( Stack * stack)
 	Node * currcell;
 	while( !is_empty_Stack(stack) )
 	{
+                
 		pop(stack, &currcell);//pop top of stack
 		short smallestneighborfloodval = get_smallest_neighbor( currcell );
-		printf("%d\n", smallestneighborfloodval );
+		//printf("%d\n", smallestneighborfloodval );
 		if( currcell->floodval != (smallestneighborfloodval + 1) )//verify floodval
 		{
 			currcell->floodval = smallestneighborfloodval + 1; //reset floodval
-			printf("new floodval set");
+			//printf("new floodval set");
 			//push all neighbors to stack:
 			if(currcell->up != NULL)
 				push(stack,currcell->up);
@@ -165,9 +167,7 @@ short get_smallest_neighbor_dir (Node * this_node, const short preferred_dir) {
   short smallestval; 		/* smallest neighbor value */
   
 
-  /* debug statement */
-  if (debug_on)
-    printf("In get_smallest_neighbor_dir\n");
+  
 
   /* get the smallest neighboring flood_val */
   smallestval = get_smallest_neighbor(this_node);

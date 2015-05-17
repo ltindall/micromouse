@@ -47,7 +47,7 @@ Node * new_Node (const short i, const short j) {
   /* Initializing the flood value at this coord
    	   NOTE : Right now this only works when SIZE is even -- which is ok */
   if (i < halfsize && j < halfsize)
-    FLOODVAL = (halfsize - 1 - i) + (halfsize - 1 - j) ;
+    this_node->floodval = (halfsize - 1 - i) + (halfsize - 1 - j) ;
 
   else if (i < halfsize && j >= halfsize)
     FLOODVAL = (halfsize - 1 - i) + (j - halfsize) ;

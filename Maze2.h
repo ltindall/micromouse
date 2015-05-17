@@ -24,8 +24,8 @@
 
 
 // Solver Constants - will be used on mouse
-#define START_X 15
-#define START_Y 0
+#define START_X 0
+#define START_Y 15
 #define LARGEVAL 301
 
 // Stack Constants
@@ -68,7 +68,12 @@ typedef struct Stack {
 } 
 Stack;
 
-
+// Stack Functions
+Stack * new_Stack();
+void delete_Stack (Stack ** spp);
+int is_empty_Stack (Stack * this_stack);
+void pop (Stack * this_stack, Node ** npp);
+void push (Stack * this_stack, Node * this_node);
 
 
 
