@@ -4,8 +4,10 @@
 #include "Maze2.h"
 //#include <stack>
 
+
+
 /* Node Constructor */
-Node * new_Node (const short i, const short j) {
+Node * new_Node (short i, short j) {
 
   Node * this_node;
   short halfsize;
@@ -13,8 +15,8 @@ Node * new_Node (const short i, const short j) {
   this_node = (Node *) malloc(sizeof(Node));
   halfsize = SIZE / 2;
 
-  this_node->row = i;
-  this_node->column = j;
+  this_node->column = i;
+  this_node->row = j;
   this_node->visited = FALSE;
 
   /* Initializing the flood value at this coord
@@ -32,6 +34,46 @@ Node * new_Node (const short i, const short j) {
     this_node->floodval = (i - halfsize) + (j - halfsize) ;
 
   return this_node;
+}
+/* Maze Constructor */
+Maze * new_Maze () {
+
+  Maze * this_maze;
+  short x, y;
+
+  this_maze = (Maze *) malloc(sizeof(Maze));
+
+  /* Allocate a new Node for each coord of maze */
+  for (x = 0; x < SIZE; ++x) 
+    for (y = 0; y < SIZE; ++y) 
+      this_maze->map[x][y] = new_Node (x, y);
+
+  /* setting the neighbors ptrs... must be done after all cells allocated */
+  for (x = 0; x < SIZE; x++)
+    for (y = 0; y < SIZE; y++) {
+      (this_maze->map[x][y])->left = (x == 0) ? NULL : (this_maze->map[x-1][y]);
+      (this_maze->map[x][y])->right = (x == SIZE-1) ? NULL : (this_maze->map[x+1][y]);
+      (this_maze->map[x][y])->up = (y == 0) ? NULL : (this_maze->map[x][y-1]);
+      (this_maze->map[x][y])->down = (y == SIZE-1) ? NULL : (this_maze->map[x][y+1]);
+    }
+
+  return this_maze;
+}
+
+/* Function: print_map
+   Description: prints the flood values of each cell in the maze */
+void print_map (const Maze * this_maze) {
+
+  short x, y;
+
+  printf("\n%s\n\n", "CURRENT MAP VALUES: ");
+  for (x = 0; x < SIZE; ++x) {
+    for (y = 0; y < SIZE; ++y) {
+      printf("%s%3hd", "  ", (this_maze->map[x][y])->floodval);
+    } 
+    printf("\n\n");
+  }
+  printf("\n");
 }
 
 /* Function: set walls of cell
