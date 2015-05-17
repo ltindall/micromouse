@@ -1013,4 +1013,151 @@ void lcd_display_location(void){
 }
 
 
+/** Function: visit
+ * Parameters: this_maze - maze with flood values
+ * this_stack - stack for flood fill
+ * x,y - coordinates to be visited
+ * flag - whether to update goal cells or not
+ * Description: visits the cell, checks for walls, and updates flood values
+ */
+void visit(Maze * this_maze, Stack * this_stack, short x, short y, short flag) {
+ 
+  
+  Node * this_node;                                  //initialize a node
+  short northwall, eastwall, southwall, westwall;    //boolean values of wall on each side
 
+  this_node = this_maze->map[x][y];                  //initialize node to the node we want to go to
+  northwall = eastwall = southwall = westwall = FALSE;
+
+  readSensor();
+  short left = check_left_wall(); 
+  short right = check_right_wall(); 
+  short front = check_front_wall(); 
+
+  if( direction == NORTH ){
+    if(left){
+      set_wall(this_node, WEST); 
+      westwall = TRUE; 
+    }
+    if(right){
+      set_wall(this_node, EAST); 
+      eastwall = TRUE; 
+    }
+    if(front){
+      set_wall(this_node, NORTH);
+      northwall = TRUE;  
+    }
+
+  }
+
+  else if(direction == WEST){
+    if(left){
+      set_wall(this_node, SOUTH); 
+      southwall = TRUE; 
+    }
+    if(right){
+      set_wall(this_node, NORTH); 
+      northwall = TRUE; 
+    }
+    if(front){
+      set_wall(this_node, WEST); 
+      westwall = TRUE; 
+    }
+  }
+
+  else if(direction == EAST ){
+    if(left){
+      set_wall(this_node, NORTH); 
+      northwall = TRUE; 
+    }
+    if(right){
+      set_wall(this_node, SOUTH); 
+      southwall = TRUE; 
+    }
+    if(front){
+      set_wall(this_node, EAST); 
+      eastwall = TRUE; 
+    }
+  }
+
+  else{
+    if(left){
+      set_wall(this_node, EAST); 
+      eastwall = TRUE; 
+    }
+    if(right){
+      set_wall(this_node, WEST); 
+      westwall = TRUE; 
+    }
+    if(front){
+      set_wall(this_node, SOUTH); 
+      southwall = TRUE; 
+    }
+  }
+
+
+
+
+  //correspondingly update the walls based on which direction we are facing
+  if (direction == NORTH) {    //check if direction is currently facing NORTH
+    if (check_front_wall()) {    //there is a front wall
+      set_wall(this_node, NORTH);
+      northwall = TRUE;
+    }
+  }
+  else if (direction == EAST){  //check if direction is currently facing EAST
+    if (check_front_wall()) {
+      set_wall(this_node, EAST);
+      eastwall = TRUE;
+    }
+  }
+  else if (direction == SOUTH) {
+    if (check_front_wall()) {
+      set_wall(this_node, SOUTH);
+      southwall = TRUE;
+    }
+  }
+  else {//direction we are facing is WEST
+    if (check_front_wall()) {
+      set_wall(this_node, WEST);
+      westwall = TRUE;
+    }
+  }
+
+//  Serial.print("Row"); 
+//  Serial.println(ROW); 
+//  Serial.print("Col"); 
+//  Serial.println(COL); 
+
+  /* If there is a wall -> do a series of checks and pushes onto the stack */
+  if (northwall) {
+    if (this_node->row != 0)
+      push (this_stack, MAP[ROW-1][COL]);
+    set_wall(this_node, NORTH);
+  }
+  if (eastwall) {
+    if (this_node->column != SIZE-1)
+      push (this_stack, MAP[ROW][COL+1]);
+    set_wall(this_node, EAST);
+  }
+  if (southwall) {
+    if (this_node->row != SIZE-1)
+      push (this_stack, MAP[ROW+1][COL]);
+    set_wall(this_node, SOUTH);
+  }
+  if (westwall) {
+    if (this_node->column != 0)
+      push (this_stack, MAP[ROW][COL-1]);
+    set_wall(this_node, WEST);
+  }
+  /* push this node itself, as it was updated */
+  push(this_stack, this_node);
+
+  /* pop until the stack is empty, and call flood_fill on that node */
+  while (!is_empty_Stack(this_stack)) {
+    pop(this_stack, &this_node);
+    /* NOTE: the flag parameter determines wheter to update goal cells or not */
+    flood_fill(this_node, this_stack, flag);
+  }
+  set_visited (this_node);
+}//end visit_node
