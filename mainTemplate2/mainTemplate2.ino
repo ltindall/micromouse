@@ -1,12 +1,12 @@
 /* IEEE Micromouse Main Driver File:
 */
 #include <avr/io.h>
-
-#include "Maze2.c"
 //#include "Maze2.h"
+#include "Maze2.c"
+
 #include "Sensor.h"
 #include "Stack.c"
-#include "Queue.c"
+
 #include "Drive.h"
 #include <LedDisplay.h>
 #include <avr/interrupt.h>
@@ -206,6 +206,10 @@ void setup()
   
   frontwallflag = 0;
   noWall = 0;
+  digitalWrite(led1, LOW);
+  digitalWrite(led2, LOW);
+  digitalWrite(led3, LOW);
+ 
 }
 
 // the loop routine runs over and over again forever:
@@ -224,14 +228,26 @@ void loop()
 //    test_tone(); 
 //    delay(400); 
 //  }
-  
+test_tone(); 
+  digitalWrite(led1, LOW);
+  digitalWrite(led2, LOW);
+  digitalWrite(led3, LOW);
   delay(200); 
-  while(!digitalRead(button1)){
-    if(digitalRead(button2))
-      digitalWrite(led1, HIGH); 
-    if(digitalRead(button3))
-      digitalWrite(led2, HIGH); 
+  Serial.print("asdfwf"); 
+  while(1){
+    Serial.print("hello: "); 
+    Serial.println(digitalRead(button3)); 
+   if(!digitalRead(button3)){
+    test_tone(); 
+    delay(400); 
+   } 
   }
+//  while(!digitalRead(button1)){
+//    if(digitalRead(button2))
+//      digitalWrite(led1, HIGH); 
+//    if(digitalRead(button3))
+//      digitalWrite(led2, HIGH); 
+//  }
   
   while(!leftSeen || !rightSeen )
   {
