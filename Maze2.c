@@ -2,7 +2,37 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "Maze2.h"
-#include <stack>
+//#include <stack>
+
+/* Node Constructor */
+Node * new_Node (const short i, const short j) {
+
+  Node * this_node;
+  short halfsize;
+
+  this_node = (Node *) malloc(sizeof(Node));
+  halfsize = SIZE / 2;
+
+  this_node->row = i;
+  this_node->column = j;
+  this_node->visited = FALSE;
+
+  /* Initializing the flood value at this coord
+   	   NOTE : Right now this only works when SIZE is even -- which is ok */
+  if (i < halfsize && j < halfsize)
+    this_node->floodval = (halfsize - 1 - i) + (halfsize - 1 - j) ;
+
+  else if (i < halfsize && j >= halfsize)
+    this_node->floodval = (halfsize - 1 - i) + (j - halfsize) ;
+
+  else if (i >= halfsize && j < halfsize)
+    this_node->floodval = (i - halfsize) + (halfsize - 1 - j) ;
+
+  else
+    this_node->floodval = (i - halfsize) + (j - halfsize) ;
+
+  return this_node;
+}
 
 /* Function: set walls of cell
    Description: given a cell, and given a direction of a wall in that cell
