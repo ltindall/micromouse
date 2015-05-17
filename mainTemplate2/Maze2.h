@@ -34,7 +34,8 @@
 #define STACK_OFFSET 2
 #define STACKSIZE 80
 
-
+// Queue Constants
+#define QUEUESIZE 80
 
 typedef struct Node { 
 
@@ -67,6 +68,20 @@ typedef struct Stack {
 
 } 
 Stack;
+
+typedef struct Queue {
+  short directions[80];
+  int size;
+  int position;
+
+}
+
+//Queue Functions
+Queue * new_Queue();
+int is_empty_Queue (Queue * this_queue);
+short pop (Queue * this_queue);
+void push (Queue * this_queue, short newDirection);
+
 
 // Stack Functions
 Stack * new_Stack();
